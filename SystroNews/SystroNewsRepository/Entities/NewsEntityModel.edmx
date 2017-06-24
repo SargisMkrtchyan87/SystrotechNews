@@ -1,0 +1,383 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="NewsModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Admin">
+          <Key>
+            <PropertyRef Name="AdminId" />
+          </Key>
+          <Property Name="AdminId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="LoginName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Password" Type="nvarchar" MaxLength="128" />
+        </EntityType>
+        <EntityType Name="Category">
+          <Key>
+            <PropertyRef Name="CategoryId" />
+          </Key>
+          <Property Name="CategoryId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Category-New_Relation">
+          <Key>
+            <PropertyRef Name="CategoryId" />
+            <PropertyRef Name="NewId" />
+          </Key>
+          <Property Name="CategoryId" Type="int" Nullable="false" />
+          <Property Name="NewId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="New">
+          <Key>
+            <PropertyRef Name="NewId" />
+          </Key>
+          <Property Name="NewId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Title" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="Content" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="CreateDate" Type="date" Nullable="false" />
+          <Property Name="PhotoId" Type="int" Nullable="false" />
+          <Property Name="Important" Type="bit" />
+          <Property Name="Disabled" Type="bit" />
+          <Property Name="PublisherId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="New-Photo_Relation">
+          <Key>
+            <PropertyRef Name="NewId" />
+            <PropertyRef Name="PhotoId" />
+          </Key>
+          <Property Name="NewId" Type="int" Nullable="false" />
+          <Property Name="PhotoId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Photo">
+          <Key>
+            <PropertyRef Name="PhotoId" />
+          </Key>
+          <Property Name="PhotoId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Path" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="Dscription" Type="nvarchar(max)" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Publisher">
+          <Key>
+            <PropertyRef Name="PublisherId" />
+          </Key>
+          <Property Name="PublisherId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="FirstName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="LastName" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_Category-New_Relation_Category">
+          <End Role="Category" Type="Self.Category" Multiplicity="1" />
+          <End Role="Category-New_Relation" Type="Self.Category-New_Relation" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Category">
+              <PropertyRef Name="CategoryId" />
+            </Principal>
+            <Dependent Role="Category-New_Relation">
+              <PropertyRef Name="CategoryId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Category-New_Relation_New">
+          <End Role="New" Type="Self.New" Multiplicity="1" />
+          <End Role="Category-New_Relation" Type="Self.Category-New_Relation" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="New">
+              <PropertyRef Name="NewId" />
+            </Principal>
+            <Dependent Role="Category-New_Relation">
+              <PropertyRef Name="NewId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_New_Photo">
+          <End Role="Photo" Type="Self.Photo" Multiplicity="1" />
+          <End Role="New" Type="Self.New" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Photo">
+              <PropertyRef Name="PhotoId" />
+            </Principal>
+            <Dependent Role="New">
+              <PropertyRef Name="PhotoId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_New_Publisher">
+          <End Role="Publisher" Type="Self.Publisher" Multiplicity="1" />
+          <End Role="New" Type="Self.New" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Publisher">
+              <PropertyRef Name="PublisherId" />
+            </Principal>
+            <Dependent Role="New">
+              <PropertyRef Name="PublisherId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_New-Photo_Relation_New">
+          <End Role="New" Type="Self.New" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="New-Photo_Relation" Type="Self.New-Photo_Relation" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="New">
+              <PropertyRef Name="NewId" />
+            </Principal>
+            <Dependent Role="New-Photo_Relation">
+              <PropertyRef Name="NewId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_New-Photo_Relation_Photo">
+          <End Role="Photo" Type="Self.Photo" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="New-Photo_Relation" Type="Self.New-Photo_Relation" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Photo">
+              <PropertyRef Name="PhotoId" />
+            </Principal>
+            <Dependent Role="New-Photo_Relation">
+              <PropertyRef Name="PhotoId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="NewsModelStoreContainer">
+          <EntitySet Name="Admin" EntityType="Self.Admin" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Category" EntityType="Self.Category" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Category-New_Relation" EntityType="Self.Category-New_Relation" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="New" EntityType="Self.New" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="New-Photo_Relation" EntityType="Self.New-Photo_Relation" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Photo" EntityType="Self.Photo" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Publisher" EntityType="Self.Publisher" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Category-New_Relation_Category" Association="Self.FK_Category-New_Relation_Category">
+            <End Role="Category" EntitySet="Category" />
+            <End Role="Category-New_Relation" EntitySet="Category-New_Relation" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Category-New_Relation_New" Association="Self.FK_Category-New_Relation_New">
+            <End Role="New" EntitySet="New" />
+            <End Role="Category-New_Relation" EntitySet="Category-New_Relation" />
+          </AssociationSet>
+          <AssociationSet Name="FK_New_Photo" Association="Self.FK_New_Photo">
+            <End Role="Photo" EntitySet="Photo" />
+            <End Role="New" EntitySet="New" />
+          </AssociationSet>
+          <AssociationSet Name="FK_New_Publisher" Association="Self.FK_New_Publisher">
+            <End Role="Publisher" EntitySet="Publisher" />
+            <End Role="New" EntitySet="New" />
+          </AssociationSet>
+          <AssociationSet Name="FK_New-Photo_Relation_New" Association="Self.FK_New-Photo_Relation_New">
+            <End Role="New" EntitySet="New" />
+            <End Role="New-Photo_Relation" EntitySet="New-Photo_Relation" />
+          </AssociationSet>
+          <AssociationSet Name="FK_New-Photo_Relation_Photo" Association="Self.FK_New-Photo_Relation_Photo">
+            <End Role="Photo" EntitySet="Photo" />
+            <End Role="New-Photo_Relation" EntitySet="New-Photo_Relation" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="NewsModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Admin">
+          <Key>
+            <PropertyRef Name="AdminId" />
+          </Key>
+          <Property Name="AdminId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="LoginName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Password" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="Category">
+          <Key>
+            <PropertyRef Name="CategoryId" />
+          </Key>
+          <Property Name="CategoryId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="News" Relationship="Self.Category_New_Relation" FromRole="Category" ToRole="New" />
+        </EntityType>
+        <EntityType Name="New">
+          <Key>
+            <PropertyRef Name="NewId" />
+          </Key>
+          <Property Name="NewId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Title" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Content" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="CreateDate" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="PhotoId" Type="Int32" Nullable="false" />
+          <Property Name="Important" Type="Boolean" />
+          <Property Name="Disabled" Type="Boolean" />
+          <Property Name="PublisherId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Photo" Relationship="Self.FK_New_Photo" FromRole="New" ToRole="Photo" />
+          <NavigationProperty Name="Publisher" Relationship="Self.FK_New_Publisher" FromRole="New" ToRole="Publisher" />
+          <NavigationProperty Name="Categories" Relationship="Self.Category_New_Relation" FromRole="New" ToRole="Category" />
+          <NavigationProperty Name="Photos" Relationship="Self.New_Photo_Relation" FromRole="New" ToRole="Photo" />
+        </EntityType>
+        <EntityType Name="Photo">
+          <Key>
+            <PropertyRef Name="PhotoId" />
+          </Key>
+          <Property Name="PhotoId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Path" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Dscription" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="News" Relationship="Self.FK_New_Photo" FromRole="Photo" ToRole="New" />
+          <NavigationProperty Name="News1" Relationship="Self.New_Photo_Relation" FromRole="Photo" ToRole="New" />
+        </EntityType>
+        <EntityType Name="Publisher">
+          <Key>
+            <PropertyRef Name="PublisherId" />
+          </Key>
+          <Property Name="PublisherId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FirstName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="LastName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="News" Relationship="Self.FK_New_Publisher" FromRole="Publisher" ToRole="New" />
+        </EntityType>
+        <Association Name="FK_New_Photo">
+          <End Role="Photo" Type="Self.Photo" Multiplicity="1" />
+          <End Role="New" Type="Self.New" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Photo">
+              <PropertyRef Name="PhotoId" />
+            </Principal>
+            <Dependent Role="New">
+              <PropertyRef Name="PhotoId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_New_Publisher">
+          <End Role="Publisher" Type="Self.Publisher" Multiplicity="1" />
+          <End Role="New" Type="Self.New" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Publisher">
+              <PropertyRef Name="PublisherId" />
+            </Principal>
+            <Dependent Role="New">
+              <PropertyRef Name="PublisherId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Category_New_Relation">
+          <End Role="Category" Type="Self.Category" Multiplicity="*" />
+          <End Role="New" Type="Self.New" Multiplicity="*" />
+        </Association>
+        <Association Name="New_Photo_Relation">
+          <End Role="New" Type="Self.New" Multiplicity="*" />
+          <End Role="Photo" Type="Self.Photo" Multiplicity="*" />
+        </Association>
+        <EntityContainer Name="NewsEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Admins" EntityType="Self.Admin" />
+          <EntitySet Name="Categories" EntityType="Self.Category" />
+          <EntitySet Name="News" EntityType="Self.New" />
+          <EntitySet Name="Photos" EntityType="Self.Photo" />
+          <EntitySet Name="Publishers" EntityType="Self.Publisher" />
+          <AssociationSet Name="FK_New_Photo" Association="Self.FK_New_Photo">
+            <End Role="Photo" EntitySet="Photos" />
+            <End Role="New" EntitySet="News" />
+          </AssociationSet>
+          <AssociationSet Name="FK_New_Publisher" Association="Self.FK_New_Publisher">
+            <End Role="Publisher" EntitySet="Publishers" />
+            <End Role="New" EntitySet="News" />
+          </AssociationSet>
+          <AssociationSet Name="Category_New_Relation" Association="Self.Category_New_Relation">
+            <End Role="Category" EntitySet="Categories" />
+            <End Role="New" EntitySet="News" />
+          </AssociationSet>
+          <AssociationSet Name="New_Photo_Relation" Association="Self.New_Photo_Relation">
+            <End Role="New" EntitySet="News" />
+            <End Role="Photo" EntitySet="Photos" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="NewsModelStoreContainer" CdmEntityContainer="NewsEntities">
+          <EntitySetMapping Name="Admins">
+            <EntityTypeMapping TypeName="NewsModel.Admin">
+              <MappingFragment StoreEntitySet="Admin">
+                <ScalarProperty Name="AdminId" ColumnName="AdminId" />
+                <ScalarProperty Name="LoginName" ColumnName="LoginName" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Categories">
+            <EntityTypeMapping TypeName="NewsModel.Category">
+              <MappingFragment StoreEntitySet="Category">
+                <ScalarProperty Name="CategoryId" ColumnName="CategoryId" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="News">
+            <EntityTypeMapping TypeName="NewsModel.New">
+              <MappingFragment StoreEntitySet="New">
+                <ScalarProperty Name="NewId" ColumnName="NewId" />
+                <ScalarProperty Name="Title" ColumnName="Title" />
+                <ScalarProperty Name="Content" ColumnName="Content" />
+                <ScalarProperty Name="CreateDate" ColumnName="CreateDate" />
+                <ScalarProperty Name="PhotoId" ColumnName="PhotoId" />
+                <ScalarProperty Name="Important" ColumnName="Important" />
+                <ScalarProperty Name="Disabled" ColumnName="Disabled" />
+                <ScalarProperty Name="PublisherId" ColumnName="PublisherId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Photos">
+            <EntityTypeMapping TypeName="NewsModel.Photo">
+              <MappingFragment StoreEntitySet="Photo">
+                <ScalarProperty Name="PhotoId" ColumnName="PhotoId" />
+                <ScalarProperty Name="Path" ColumnName="Path" />
+                <ScalarProperty Name="Dscription" ColumnName="Dscription" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Publishers">
+            <EntityTypeMapping TypeName="NewsModel.Publisher">
+              <MappingFragment StoreEntitySet="Publisher">
+                <ScalarProperty Name="PublisherId" ColumnName="PublisherId" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="Category_New_Relation" TypeName="NewsModel.Category_New_Relation" StoreEntitySet="Category-New_Relation">
+            <EndProperty Name="Category">
+              <ScalarProperty Name="CategoryId" ColumnName="CategoryId" />
+            </EndProperty>
+            <EndProperty Name="New">
+              <ScalarProperty Name="NewId" ColumnName="NewId" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="New_Photo_Relation" TypeName="NewsModel.New_Photo_Relation" StoreEntitySet="New-Photo_Relation">
+            <EndProperty Name="New">
+              <ScalarProperty Name="NewId" ColumnName="NewId" />
+            </EndProperty>
+            <EndProperty Name="Photo">
+              <ScalarProperty Name="PhotoId" ColumnName="PhotoId" />
+            </EndProperty>
+          </AssociationSetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
